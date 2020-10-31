@@ -79,5 +79,5 @@ const products = [
   },
 ]
 
-// export default products // backend is not set up for ES modules
-module.exports = products
+// module.exports = products
+export default products // set "type" = "module" in package.json

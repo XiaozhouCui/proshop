@@ -16,7 +16,6 @@ const Product = ({ product }) => {
             <strong>{product.name}</strong>
           </Card.Title>
         </Link>
-
         <Card.Text as='div'>
           <Rating
             value={product.rating}
@@ -24,7 +23,6 @@ const Product = ({ product }) => {
             // color='#f8e825' // this is defined in Rating.defaultProps
           />
         </Card.Text>
-
         <Card.Text as='h3'>${product.price}</Card.Text>
       </Card.Body>
     </Card>
