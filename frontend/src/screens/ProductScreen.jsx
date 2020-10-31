@@ -1,11 +1,24 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Row, Col, Image, ListGroup, Card, Button } from 'react-bootstrap'
 import Rating from '../components/Rating'
-import products from '../products'
+import axios from 'axios'
 
+// "match" prop is from react-router-dom with /:id params
 const ProductScreen = ({ match }) => {
-  const product = products.find((p) => p._id === match.params.id)
+  const [product, setProduct] = useState({})
+
+  useEffect(() => {
+    // CANNOT add "async" directly to useEffect arg func
+    const fetchProduct = async () => {
+      // backend url "http://127.0.0.1:5000" is added as proxy in frontend package.json
+      // proxy will fake "http://127.0.0.1:5000" as "http://127.0.0.1:3000"
+      const { data } = await axios.get(`/api/products/${match.params.id}`)
+      setProduct(data)
+    }
+
+    fetchProduct()
+  }, [match.params.id])
 
   return (
     <>
