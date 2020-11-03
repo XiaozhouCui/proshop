@@ -1,34 +1,40 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Col, Row } from 'react-bootstrap'
 import Product from '../components/Product'
-import axios from 'axios'
+import { listProducts } from '../actions/productActions'
 
 const HomeScreen = () => {
-  const [products, setProducts] = useState([])
+  // with "useDispatch", we no longer need "connect" wrapper to dispatch actions
+  const dispatch = useDispatch()
+
+  // with "useSelector", we can pick a slice of store without "mapStateToProps"
+  const productList = useSelector((state) => state.productList)
+  const { loading, error, products } = productList
 
   useEffect(() => {
     // CANNOT add "async" directly to useEffect arg func
-    const fetchProducts = async () => {
-      // backend url "http://127.0.0.1:5000" is added as proxy in frontend package.json
-      // proxy will fake "http://127.0.0.1:5000" as "http://127.0.0.1:3000"
-      const { data } = await axios.get('/api/products')
-      setProducts(data)
-    }
-
-    fetchProducts()
-  }, [])
+    dispatch(listProducts())
+  }, [dispatch]) // add "dispatch" as dependency
 
   return (
     <>
       <h1>Latest Products</h1>
-      <Row>
-        {products.map((product) => (
-          // on small screen will take 12 columns
-          <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
-            <Product product={product} />
-          </Col>
-        ))}
-      </Row>
+      {loading ? (
+        <h2>Loading...</h2>
+      ) : error ? (
+        <h3>{error}</h3>
+      ) : (
+        // only render products if there is NO error in store
+        <Row>
+          {products.map((product) => (
+            // on small screen will take 12 columns
+            <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
+              <Product product={product} />
+            </Col>
+          ))}
+        </Row>
+      )}
     </>
   )
 }

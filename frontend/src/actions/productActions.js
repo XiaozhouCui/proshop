@@ -8,7 +8,8 @@ import {
 export const listProducts = () => async (dispatch) => {
   try {
     dispatch({ type: PRODUCT_LIST_REQUEST })
-
+    // backend url "http://127.0.0.1:5000" is added as proxy in frontend package.json
+    // proxy will fake "http://127.0.0.1:5000" as "http://127.0.0.1:3000"
     const { data } = await axios.get('/api/products')
 
     dispatch({
