@@ -2,7 +2,7 @@ import axios from 'axios'
 import { CART_ADD_ITEM } from '../constants/cartConstants'
 
 // "getState()" will return the entire state tree of redux store
-export const adToCart = (id, qty) => async (dispatch, getState) => {
+export const addToCart = (id, qty) => async (dispatch, getState) => {
   const { data } = await axios.get(`/api/products/${id}`)
 
   dispatch({

@@ -9,7 +9,7 @@ import { listProductDetails } from '../actions/productActions'
 
 // "match" prop is from react-router-dom with /:id params
 const ProductScreen = ({ history, match }) => {
-  const [qty, setQty] = useState(0)
+  const [qty, setQty] = useState(1)
 
   const dispatch = useDispatch()
 
@@ -21,7 +21,7 @@ const ProductScreen = ({ history, match }) => {
   }, [dispatch, match])
 
   const addToCartHandler = () => {
-    // use "history" to change page
+    // use "history" to redirect page
     history.push(`/cart/${match.params.id}?qty=${qty}`)
   }
 
