@@ -12,6 +12,7 @@ export const cartReducer = (state = { cartItems: [] }, action) => {
         return {
           ...state,
           cartItems: state.cartItems.map((x) =>
+            // replace the existing item obj with the newly added item obj
             x.product === existItem.product ? item : x
           ),
         }
@@ -22,6 +23,11 @@ export const cartReducer = (state = { cartItems: [] }, action) => {
         }
       }
 
+    case CART_REMOVE_ITEM:
+      return {
+        ...state,
+        cartItems: state.cartItems.filter((x) => x.product !== action.payload),
+      }
     default:
       return state
   }

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Row, Col, ListGroup, Image, Form, Button, Card } from 'react-bootstrap'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
-import { addToCart } from '../actions/cartActions'
+import { addToCart, removeFromCart } from '../actions/cartActions'
 
 // "location" is used to get querry string parameters (?qty=3)
 const CartScreen = ({ match, location, history }) => {
@@ -26,7 +26,7 @@ const CartScreen = ({ match, location, history }) => {
   }, [dispatch, productId, qty]) // useEffect will re-run if any of dependencies changes
 
   const removeFromCartHandler = (id) => {
-    console.log('remove')
+    dispatch(removeFromCart(id))
   }
 
   const checkoutHandler = () => {
