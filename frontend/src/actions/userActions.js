@@ -10,6 +10,10 @@ import {
   USER_DETAILS_REQUEST,
   USER_DETAILS_SUCCESS,
   USER_DETAILS_FAIL,
+  USER_UPDATE_PROFILE_REQUEST,
+  USER_UPDATE_PROFILE_SUCCESS,
+  USER_UPDATE_PROFILE_FAIL,
+  USER_UPDATE_PROFILE_RESET,
 } from '../constants/userConstants'
 
 export const login = (email, password) => async (dispatch) => {
@@ -120,6 +124,42 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_DETAILS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message // custom message from api
+          : error.response, // generic message
+    })
+  }
+}
+
+// take in entire user object
+export const updateUserProfile = (user) => async (dispatch, getState) => {
+  try {
+    // dispatch action to reducer to set loading=true
+    dispatch({ type: USER_UPDATE_PROFILE_REQUEST })
+
+    // get state.userLogin.userInfo
+    const {
+      userLogin: { userInfo },
+    } = getState()
+
+    // setup auth header from token in state
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    }
+    // PUT request, pass in user object
+    const { data } = await axios.put(`/api/users/profile`, user, config)
+    // if successful, dispatch action to reducer
+    dispatch({
+      type: USER_UPDATE_PROFILE_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    dispatch({
+      type: USER_UPDATE_PROFILE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message // custom message from api
