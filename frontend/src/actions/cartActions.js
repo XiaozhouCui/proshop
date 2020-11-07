@@ -3,6 +3,7 @@ import {
   CART_ADD_ITEM,
   CART_REMOVE_ITEM,
   CART_SAVE_SHIPPING_ADDRESS,
+  CART_SAVE_PAYMENT_METHOD,
 } from '../constants/cartConstants'
 
 // "getState()" will return the entire state tree of redux store
@@ -42,4 +43,14 @@ export const saveShippingAddress = (data) => async (dispatch) => {
   })
 
   localStorage.setItem('shippingAddress', JSON.stringify(data))
+}
+
+// pass in form data as arg
+export const savePaymentMethod = (data) => async (dispatch) => {
+  dispatch({
+    type: CART_SAVE_PAYMENT_METHOD,
+    payload: data,
+  })
+
+  localStorage.setItem('paymentMethod', JSON.stringify(data))
 }
