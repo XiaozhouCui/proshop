@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
+import axios from 'axios'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { getOrderDetails } from '../actions/orderActions'
@@ -10,18 +11,48 @@ const OrderScreen = ({ match }) => {
   // get order ID from url (/orders/:id)
   const orderId = match.params.id
 
+  const [sdkReady, setSdkReady] = useState(false)
+
   const dispatch = useDispatch()
 
   // get order details from state
   const orderDetails = useSelector((state) => state.orderDetails)
   const { order, loading, error } = orderDetails // initial state: { loading: true }
 
-  // fetch the most recent order
+  // get payment status from store
+  const orderPay = useSelector((state) => state.orderPay)
+  const { loading: loadingPay, success: successPay } = orderPay // initial state: { loading: true }
+
   useEffect(() => {
-    if (!order || order._id !== orderId) {
-      dispatch(getOrderDetails(orderId))
+    const addPayPalScript = async () => {
+      // PayPal client ID is stored in backend env, need to get it from API
+      const { data: clientId } = await axios.get('/api/config/paypal')
+      // Customize the PayPal JavaScript SDK Script
+      const script = document.createElement('script')
+      script.type = 'text/javascript'
+      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`
+      script.async = true
+      // once the script is loaded, there will be "window.paypal" object, then update local state
+      script.onload = () => {
+        setSdkReady(true)
+      }
+      // append the <script> to <body>
+      document.body.appendChild(script)
     }
-  }, [dispatch, order, orderId])
+
+    // if payment is successful, re-fetch order details
+    if (!order || order._id !== orderId || successPay) {
+      // re-fetch the most recent order
+      dispatch(getOrderDetails(orderId))
+    } else if (!order.isPaid) {
+      // check if PayPal script is loaded
+      if (!window.paypal) {
+        addPayPalScript()
+      } else {
+        setSdkReady(true)
+      }
+    }
+  }, [dispatch, order, orderId, successPay])
 
   // initial state: { loading: true }, always show loader when no order fetched
   if (loading) return <Loader />

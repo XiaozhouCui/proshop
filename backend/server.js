@@ -29,6 +29,11 @@ app.use('/api/products', productRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/orders', orderRoutes)
 
+// store PayPal client ID in this route
+app.get('/api/config/paypal', (req, res) =>
+  res.send(process.env.PAYPAL_CLIENT_ID)
+)
+
 // catch non-existing routes
 app.use(notFound)
 // global error handler: all thrown error will be caught here
