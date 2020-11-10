@@ -6,6 +6,9 @@ import {
   PRODUCT_DETAILS_REQUEST,
   PRODUCT_DETAILS_SUCCESS,
   PRODUCT_DETAILS_FAIL,
+  PRODUCT_DELETE_REQUEST,
+  PRODUCT_DELETE_SUCCESS,
+  PRODUCT_DELETE_FAIL,
 } from '../constants/productConstants'
 
 export const listProducts = () => async (dispatch) => {
@@ -45,6 +48,39 @@ export const listProductDetails = (id) => async (dispatch) => {
       type: PRODUCT_DETAILS_FAIL,
       payload:
         // check if both generic and custom message exist
+        error.response && error.response.data.message
+          ? error.response.data.message // custom message from api
+          : error.response, // generic message
+    })
+  }
+}
+
+export const deleteProduct = (id) => async (dispatch, getState) => {
+  try {
+    // dispatch action to reducer to set loading=true
+    dispatch({ type: PRODUCT_DELETE_REQUEST })
+
+    // get state.userLogin.userInfo
+    const {
+      userLogin: { userInfo },
+    } = getState()
+
+    // setup auth header with bearer token from store
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    }
+    // DELETE product from API
+    await axios.delete(`/api/products/${id}`, config)
+    // if successful, update state { success: true }
+    dispatch({
+      type: PRODUCT_DELETE_SUCCESS,
+    })
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_DELETE_FAIL,
+      payload:
         error.response && error.response.data.message
           ? error.response.data.message // custom message from api
           : error.response, // generic message
