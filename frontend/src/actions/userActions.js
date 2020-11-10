@@ -21,6 +21,9 @@ import {
   USER_DELETE_REQUEST,
   USER_DELETE_SUCCESS,
   USER_DELETE_FAIL,
+  USER_UPDATE_REQUEST,
+  USER_UPDATE_SUCCESS,
+  USER_UPDATE_FAIL,
 } from '../constants/userConstants'
 import { ORDER_LIST_MY_RESET } from '../constants/orderConstants'
 
@@ -40,7 +43,7 @@ export const login = (email, password) => async (dispatch) => {
       { email, password },
       config
     )
-    // if successful, dispatch action to reducer
+    // if successful, save data to state.userLogin.userInfo
     dispatch({
       type: USER_LOGIN_SUCCESS,
       payload: data,
@@ -84,7 +87,7 @@ export const register = (name, email, password) => async (dispatch) => {
       { name, email, password },
       config
     )
-    // if successful, dispatch action to reducer
+    // if successful, save data to state.userRegister.userInfo
     dispatch({
       type: USER_REGISTER_SUCCESS,
       payload: data,
@@ -163,7 +166,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
     }
     // PUT request, pass in user object
     const { data } = await axios.put(`/api/users/profile`, user, config)
-    // if successful, dispatch action to reducer
+    // if successful, save profile to state.userDetauls.user
     dispatch({
       type: USER_UPDATE_PROFILE_SUCCESS,
       payload: data,
@@ -197,7 +200,7 @@ export const listUsers = () => async (dispatch, getState) => {
     }
     // PUT request, pass in user object
     const { data } = await axios.get(`/api/users`, config)
-    // if successful, dispatch action to reducer
+    // if successful, save data to state.userList.users
     dispatch({
       type: USER_LIST_SUCCESS,
       payload: data,
@@ -231,13 +234,52 @@ export const deleteUser = (id) => async (dispatch, getState) => {
     }
     // DELETE request, pass in user ID
     await axios.delete(`/api/users/${id}`, config)
-    // if successful, dispatch action to reducer
+    // if successful, set state { success: true }
     dispatch({
       type: USER_DELETE_SUCCESS,
     })
   } catch (error) {
     dispatch({
       type: USER_DELETE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message // custom message from api
+          : error.response, // generic message
+    })
+  }
+}
+
+export const updateUser = (user) => async (dispatch, getState) => {
+  try {
+    // dispatch action to reducer to set loading=true
+    dispatch({ type: USER_UPDATE_REQUEST })
+
+    // get state.userLogin.userInfo
+    const {
+      userLogin: { userInfo },
+    } = getState()
+
+    // setup auth header from token in state
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    }
+    // UPDATE request, pass in user object
+    const { data } = await axios.put(`/api/users/${user._id}`, user, config)
+    // if successful, set store { success: true }
+    dispatch({
+      type: USER_UPDATE_SUCCESS,
+    })
+    // save user details to state.userDetails.user
+    dispatch({
+      type: USER_DETAILS_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    dispatch({
+      type: USER_UPDATE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message // custom message from api
