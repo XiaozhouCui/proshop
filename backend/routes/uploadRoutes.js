@@ -12,7 +12,10 @@ const storage = multer.diskStorage({
   },
   filename(req, file, cb) {
     // use "path" to grab file extension (.jpg and .png etc.)
-    cb(null, `${file.filename}-${Date.now()}${path.extname(file.originalname)}`)
+    cb(
+      null,
+      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
+    )
   },
 })
 
