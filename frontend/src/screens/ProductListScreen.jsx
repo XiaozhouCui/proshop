@@ -43,9 +43,9 @@ const ProductListScreen = ({ history, match }) => {
       history.push('/login')
     }
 
-    // Redirect if we just added a new product
+    // Redirect to ProductEditScreen if we just added a new product
     if (successCreate) {
-      history.push(`/admin/product/${createdProduct._id}`)
+      history.push(`/admin/product/${createdProduct._id}/edit`)
     } else {
       dispatch(listProducts())
     }
