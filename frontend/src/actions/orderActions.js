@@ -9,6 +9,9 @@ import {
   ORDER_PAY_REQUEST,
   ORDER_PAY_SUCCESS,
   ORDER_PAY_FAIL,
+  ORDER_DELIVER_REQUEST,
+  ORDER_DELIVER_SUCCESS,
+  ORDER_DELIVER_FAIL,
   ORDER_LIST_MY_REQUEST,
   ORDER_LIST_MY_SUCCESS,
   ORDER_LIST_MY_FAIL,
@@ -188,6 +191,44 @@ export const listOrders = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: ORDER_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message // custom message from api
+          : error.response, // generic message
+    })
+  }
+}
+
+export const deliverOrder = (order) => async (dispatch, getState) => {
+  try {
+    // dispatch action to reducer to set loading=true
+    dispatch({ type: ORDER_DELIVER_REQUEST })
+
+    // get state.userLogin.userInfo
+    const {
+      userLogin: { userInfo },
+    } = getState()
+
+    // setup auth header with bearer token from store
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    }
+    // PUT request, no need to pass any data
+    const { data } = await axios.put(
+      `/api/orders/${order._id}/deliver`,
+      {},
+      config
+    )
+    // if successful, update {success: true}
+    dispatch({
+      type: ORDER_DELIVER_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    dispatch({
+      type: ORDER_DELIVER_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message // custom message from api
