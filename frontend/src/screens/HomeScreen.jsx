@@ -6,7 +6,10 @@ import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { listProducts } from '../actions/productActions'
 
-const HomeScreen = () => {
+const HomeScreen = ({ match }) => {
+  // get keyword from url '/search/:keyword'
+  const keyword = match.params.keyword
+
   // with "useDispatch", we no longer need "connect" wrapper to dispatch actions
   const dispatch = useDispatch()
 
@@ -16,8 +19,8 @@ const HomeScreen = () => {
 
   useEffect(() => {
     // CANNOT add "async" directly to useEffect arg func
-    dispatch(listProducts())
-  }, [dispatch]) // add "dispatch" as dependency
+    dispatch(listProducts(keyword))
+  }, [dispatch, keyword]) // add "dispatch" as dependency
 
   return (
     <>

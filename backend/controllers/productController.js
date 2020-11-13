@@ -5,7 +5,18 @@ import Product from '../models/productModel.js'
 // @route   GET /api/products
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find()
+  // get keyword from query string '/api/products?keyword=blahblah'
+  const keyword = req.query.keyword
+    ? {
+        name: {
+          $regex: req.query.keyword, // find regex match in product names
+          $options: 'i', // case insensitive
+        },
+      }
+    : {}
+
+  // mongo query: find({ name: { $regex: keyword, $options: 'i' } })
+  const products = await Product.find({ ...keyword })
   res.json(products)
 })
 
@@ -128,7 +139,6 @@ const createProductRrview = asyncHandler(async (req, res) => {
       product.reviews.reduce((acc, item) => item.rating + acc, 0) /
       product.reviews.length
 
-    console.log(product.reviews)
     await product.save()
     res.status(201).json({ message: 'Review added' })
   } else {
