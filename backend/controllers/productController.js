@@ -6,7 +6,7 @@ import Product from '../models/productModel.js'
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
   // number of products per page
-  const pageSize = 4
+  const pageSize = 10
   // get pageNumber from query string '/api/products?pageNumber=5'
   const page = Number(req.query.pageNumber) || 1
 

@@ -8,7 +8,6 @@ import Message from '../components/Message'
 import {
   listProductDetails,
   createProductReview,
-  createProduct,
 } from '../actions/productActions'
 import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstants'
 
