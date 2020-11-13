@@ -5,8 +5,13 @@ import Product from '../models/productModel.js'
 // @route   GET /api/products
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
-  // get keyword from query string '/api/products?keyword=blahblah'
-  const keyword = req.query.keyword
+  // number of products per page
+  const pageSize = 4
+  // get pageNumber from query string '/api/products?pageNumber=5'
+  const page = Number(req.query.pageNumber) || 1
+
+  // keyword is an object containing search query
+  const keyword = req.query.keyword // get keyword string from query string '/api/products?keyword=camera'
     ? {
         name: {
           $regex: req.query.keyword, // find regex match in product names
@@ -15,9 +20,13 @@ const getProducts = asyncHandler(async (req, res) => {
       }
     : {}
 
+  const count = await Product.countDocuments({ ...keyword }) // total number of products
   // mongo query: find({ name: { $regex: keyword, $options: 'i' } })
   const products = await Product.find({ ...keyword })
-  res.json(products)
+    .limit(pageSize)
+    .skip(pageSize * (page - 1))
+
+  res.json({ products, page, pages: Math.ceil(count / pageSize) })
 })
 
 // @desc    Fetch single product
