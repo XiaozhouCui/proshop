@@ -23,8 +23,8 @@ const getProducts = asyncHandler(async (req, res) => {
   const count = await Product.countDocuments({ ...keyword }) // total number of products
   // mongo query: find({ name: { $regex: keyword, $options: 'i' } })
   const products = await Product.find({ ...keyword })
-    .limit(pageSize)
-    .skip(pageSize * (page - 1))
+    .limit(pageSize) // 10 products per page
+    .skip(pageSize * (page - 1)) // skip all products before current page
 
   res.json({ products, page, pages: Math.ceil(count / pageSize) })
 })
@@ -156,6 +156,15 @@ const createProductRrview = asyncHandler(async (req, res) => {
   }
 })
 
+// @desc    Create top rated products
+// @route   GET /api/products/top
+// @access  Public
+const getTopProducts = asyncHandler(async (req, res) => {
+  const products = await Product.find({}).sort({ rating: -1 }).limit(3)
+
+  res.json(products)
+})
+
 export {
   getProducts,
   getProductById,
@@ -163,4 +172,5 @@ export {
   createProduct,
   updateProduct,
   createProductRrview,
+  getTopProducts,
 }
