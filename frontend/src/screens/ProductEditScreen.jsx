@@ -77,13 +77,13 @@ const ProductEditScreen = ({ match, history }) => {
       // API returned data: req.file.path
       const { data } = await axios.post('/api/upload', formData, config)
 
-      // convert "\" to "/"
-      let imagePath
-      if (/\\/.test(data)) {
-        imagePath = data.replace('\\', '/')
-      }
+      // // convert "\" to "/"
+      // let imagePath
+      // if (/\\/.test(data)) {
+      //   imagePath = data.replace('\\', '/')
+      // }
 
-      setImage(imagePath)
+      setImage(data)
       setUploading(false)
     } catch (error) {
       console.error(error)
