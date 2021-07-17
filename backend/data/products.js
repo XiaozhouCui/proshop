@@ -12,6 +12,18 @@ const products = [
     numReviews: 12,
   },
   {
+    name: 'iPhone 12 Pro 128GB Memory',
+    image: '/images/iPhone12.jpg',
+    description:
+      'Introducing the iPhone 12 Pro. A transformative triple-camera system that adds tons of capability without complexity. An unprecedented leap in battery life',
+    brand: 'Apple',
+    category: 'Electronics',
+    price: 1299.99,
+    countInStock: 12,
+    rating: 4.5,
+    numReviews: 10,
+  },
+  {
     name: 'iPhone 11 Pro 256GB Memory',
     image: '/images/phone.jpg',
     description:
@@ -44,6 +56,18 @@ const products = [
     category: 'Electronics',
     price: 399.99,
     countInStock: 11,
+    rating: 4,
+    numReviews: 12,
+  },
+  {
+    name: 'Sony Playstation 5',
+    image: '/images/PS5.jpg',
+    description:
+      'The ultimate home entertainment center starts with PlayStation. Whether you are into gaming, HD movies, television, music',
+    brand: 'Sony',
+    category: 'Electronics',
+    price: 499.99,
+    countInStock: 11,
     rating: 5,
     numReviews: 12,
   },
@@ -58,6 +82,18 @@ const products = [
     countInStock: 7,
     rating: 3.5,
     numReviews: 10,
+  },
+  {
+    name: 'Amazon Echo Dot 4th Generation',
+    image: '/images/echodot4.jpg',
+    description:
+      'Meet Echo Dot - Our most popular smart speaker with a fabric design. It is our most compact smart speaker that fits perfectly into small space',
+    brand: 'Amazon',
+    category: 'Electronics',
+    price: 39.99,
+    countInStock: 0,
+    rating: 4.6,
+    numReviews: 12,
   },
   {
     name: 'Amazon Echo Dot 3rd Generation',

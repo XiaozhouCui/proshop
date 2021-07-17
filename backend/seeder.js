@@ -9,7 +9,7 @@ import Order from './models/orderModel.js'
 import connectDB from './config/db.js'
 
 // this seeder is a complete separate runtime, need to re-connect to DB
-dotenv.config()
+dotenv.config({ path: '../.env' })
 
 connectDB()
 
